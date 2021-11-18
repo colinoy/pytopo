@@ -2,6 +2,7 @@ from Search_Venues_API_wrapper import single_restaurant
 from rich import print
 
 
+
 class Single_venue:
     def __init__(self, date, hour, seats, venue_id):
         self.date = date
@@ -18,7 +19,19 @@ class Single_venue:
             availability_slots.append(single_restaurant(self.date, hour, self.seats, self.venue_id))
         return availability_slots
 
+    def search_day(self):
+        availability_slots = []
+        for hour in range(0000, 2500, 100):
+            availability_slots.append(single_restaurant(self.date, hour, self.seats, self.venue_id))
+        return availability_slots
+
+    def Search_Date_Range(self, date, last_date):
+        availability_slots = []
+        for data in range(date, last_date, 1):
+            availability_slots.append(single_restaurant(data, self.hour, self.seats, self.venue_id))
+        return availability_slots
 
 
 str343 = Single_venue(20211117, 1800, 3, "junowine")
-print(str343.Search_Range_of_Hours(1700, 2000))
+print(str343.Search_Date_Range(20211117, 20211120)[0]['method'])
+
