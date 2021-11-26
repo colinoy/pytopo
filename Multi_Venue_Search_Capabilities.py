@@ -1,51 +1,86 @@
 from Search_Venues_API_wrapper import single_restaurant
 from Search_Venues_API_wrapper import all_restaurants
 from Search_Venues_API_wrapper import all_restaurants_city
+from Search_Venues_API_wrapper import search_by_theme
 from rich import print
+from datetime import datetime
 
 
-class Multi_venue():
-    def __init__(self, date, hour, seats, venues=[]):
-        self.date = date
-        self.hour = hour
-        self.seats = seats
-        self.venues = venues
-        self.all_availabe = []
+class Multi_venue:
+    def __init__(self):
+        pass
 
-    def get_all_restaurants(self):
-        if len(self.venues) == 0 and self.city == '':
-            restaurants = all_restaurants()
-            self.venues = [restaurants[i]['pageId'] for i in range(0, len(all_restaurants()))]
-        if len(self.venues) == 0 and self.city != '':
-            restaurants = all_restaurants_city()
-            self.venues = [restaurants[i]['pageId'] for i in range(0, len(all_restaurants_city()))]
-        return self.venues
+    @staticmethod
+    def get_all_restaurants():
+        restaurants = all_restaurants()
+        all_venues = [restaurants[i]['pageId'] for i in range(len(restaurants))]
+        return all_venues
 
-    def get_all_restaurants_available(self):
-        results = [single_restaurant(self.date, self.hour, self.seats, res) for res in self.get_all_restaurants()]
-        for restaurant in results:
-            if restaurant['method'] == 'seat':
-                self.all_availabe.append(restaurant)
-        return self.all_availabe
+    @staticmethod
+    def get_all_restaurants_city(city):
+        restaurants = all_restaurants_city(city)
+        all_venues = [restaurants['venues'][i]['pageId'] for i in range(len(restaurants['venues']))]
+        return all_venues
 
-    def search_hour_range(self, start_hour, last_hour):
-        results = []
-        for hour in range(start_hour, last_hour + 100, 100):
-            results = [single_restaurant(self.date, hour, self.seats, res) for res in self.get_all_restaurants()]
+    @staticmethod
+    def get_all_restaurants_city_by_theme(city, theme):
+        restaurants = search_by_theme(city, theme)
+        all_venues = [restaurants['venues'][i]['pageId'] for i in range(len(restaurants['venues']))]
+        return all_venues
+
+    # Searching availability
+
+    @staticmethod
+    def search_availability_city_by_theme(date, hour, seats, city, theme):
+        results = [single_restaurant(date, hour, seats, res) for res in
+                   Multi_venue.get_all_restaurants_city_by_theme(city, theme)]
+        # If method==seat restaurant has slots available
+        results_availability = [restaurant for restaurant in results if restaurant['method'] == 'seat']
+        return results_availability
+
+    @staticmethod
+    def search_availability_city(date, hour, seats, city):
+        results = [single_restaurant(date, hour, seats, res) for res in Multi_venue.get_all_restaurants_city(city)]
+        results_availability = [restaurant for restaurant in results if restaurant['method'] == 'seat']
+        return results_availability
+
+    @staticmethod
+    def get_all_restaurants_available(date, hour, seats, venue_id=None):
+        if venue_id is None:
+            all_res = Multi_venue.get_all_restaurants()
+        else:
+            all_res = venue_id
+        results = [single_restaurant(date, hour, seats, res) for res in all_res]
+        results_availability = [restaurant for restaurant in results if restaurant['method'] == 'seat']
+        return results_availability
+
+    # TODO: add search hour range by city
+    # TODO: remove search hour range of all restaurants
+    @staticmethod
+    def search_hour_range(date, seats, start_hour, last_hour, venue_id=None):
+        results = [Multi_venue.get_all_restaurants_available(date, hour, seats, venue_id) for hour in
+                   range(start_hour, last_hour + 100, 100)]
         return results
 
-    def search_all_day(self):
-        return self.search_hour_range(0000, 2400)
+    @staticmethod
+    def search_all_day(date, seats, venue_id=None):
+        return Multi_venue.search_hour_range(date, seats, 0000, 2400, venue_id)
 
-    def search_date_range(self, first, last):
-        results = []
-        for day in range(first, last + 1, 1):
-            results = [single_restaurant(day, self.hour, self.seats, res) for res in self.get_all_restaurants()]
+    @staticmethod
+    def search_date_range(first, last, hour, seats, venue_id=None):
+        results = [Multi_venue.get_all_restaurants_available(date, hour, seats, venue_id) for date in
+                   range(first, last + 1, 1)]
         return results
 
+    @staticmethod
+    def print(list_of_availability):
+        for i in range(len(list_of_availability)):
+            for j in range(len(list_of_availability[i]['areas'])):
+                if list_of_availability[i]['areas'][j]['options'][j]['method'] == 'seat':
+                    print(list_of_availability[i]['areas'][j]['options'])
 
 
-test1 = Multi_venue(20211122, 1800, 2,
-                    ['yaffotelaviv', 'cafepopularrest', 'silo', 'cafeeuropa', 'dixie', 'thebluerooster'])
-print(test1.search_date_range(20211122, 20211123))
-
+if __name__ == '__main__':
+    res = Multi_venue.get_all_restaurants_available(20211122, 1800, 2,
+                                                    ['junowine', 'yaffotelaviv', 'cafepopularrest', 'silo'])
+    Multi_venue.print(res)

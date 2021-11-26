@@ -1,6 +1,7 @@
-from rich import print
 import requests
-import json
+from rich import print
+
+from datetime import datetime
 
 cities = {"Tel Aviv": {"lat": 32.0650841, "lon": 34.7708837, "distance": 5},
           "Jerusalem": {"lat": 31.7664943, "lon": 35.2251867, "distance": 5},
@@ -45,7 +46,7 @@ themes = {"meats": "\u05D1\u05E9\u05E8\u05D9\u05DD",
           "Chinese": "\u05E1\u05D9\u05E0\u05D9"}
 
 
-def single_restaurant(date, time, size, restaurant_id):
+def single_restaurant(when, size, restaurant_id):
     headers = {
         'authority': 'ontopo.co.il',
         'sec-ch-ua': '"Google Chrome";v="95", "Chromium";v="95", ";Not A Brand";v="99"',
@@ -65,15 +66,27 @@ def single_restaurant(date, time, size, restaurant_id):
                   'auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
                   '.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsiYW5vbnltb3VzIl0sIngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6ImFub255bW91cyIsIngtaGFzdXJhLXVzZXItaWQiOiIwMWU3YWYxMi0xMjRjLTQ5YzYtYTg5Ni1mM2Y5MjU4MDU1MzIifSwiaWF0IjoxNjM2NTIyOTc2LCJleHAiOjE2MzY1MjM4NzZ9.b7QzocZUaSaKBoa1Yrp10UuJ6MrrybSHq7zN1Ie-42g; auth_refresh_token=e375b61a-f9e2-4e05-9bcd-53fc45e6151c; auth_token_expired=2021-11-10T05%3A52%3A56Z; _gid=GA1.3.1953460068.1636522980; _gat_UA-113921616-2=1',
     }
-
+    hour = when.strftime("%H%M")
+    date = when.strftime("%Y%m%d")
     data = {"page_id": str(restaurant_id), "locale": "he",
-            "criteria": {"size": str(size), "date": str(date), "time": str(time)},
+            "criteria": {"size": str(size), "date": str(date), "time": str(hour)},
             "app": "web", "origin": "marketplace", "sessionId": "b760d78b-9e27-44d1-b4af-34fa0e2af28f",
             "stationId": "fd0f0464-1637-4baf-9aea-1821ecaa8d54", "sendAnalytics": "true"}
 
     response = requests.post('https://ontopo.co.il/api/availability/searchAvailability', headers=headers, json=data)
     response = response.json()
-    return response
+    results = {}
+    for word in response.keys():
+        if word == 'areas':
+            for i in range(len(response['areas'])):
+                results[response[word][i]['id']] = [response['areas'][i]['options'][j]['time']
+                                                    for j in range(len(response['areas'][i]['options']))
+                                                    if response['areas'][i]['options'][j]['method'] == 'seat']
+        if word == 'recommended':
+            if response['recommended'][0]['id'] in results.keys():
+                results[response['recommended'][0]['id']].append(response['recommended'][0]['time'])
+            else: results[response['recommended'][0]['id']] = response['recommended'][0]['time']
+    return results
 
 
 def all_restaurants_city(city):
@@ -164,4 +177,7 @@ def search_by_theme(city, theme):
     return response
 
 
-# print(single_restaurant(20211121, 1800,2,'yaffotelaviv'))
+if __name__ == '__main__':
+    date_time_start = datetime.strptime("13/12/2021 18:30", '%d/%m/%Y  %H:%M')
+    # print(date_time_start)
+    # print(single_restaurant(date_time_start, 3, 'junowine'))
