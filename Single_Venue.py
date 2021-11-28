@@ -2,6 +2,7 @@ from Search_Venues_API_wrapper import single_restaurant
 from rich import print
 from datetime import datetime
 from datetime import timedelta
+import time
 
 
 class SingleVenue:
@@ -15,41 +16,43 @@ class SingleVenue:
 
     @staticmethod
     def search_range_of_hours(venue_id, seats, when_start, when_end, frequency):
-        date_time_start = datetime.strptime(when_start, '%d/%m/%Y  %H:%M')
-        date_time_end = datetime.strptime(when_end, '%d/%m/%Y  %H:%M')
         availability_slots = {}
-        while date_time_start <= date_time_end:
-            for key, value in single_restaurant(date_time_start, seats, venue_id).items():
-                if key in availability_slots.keys():
-                    availability_slots[key] += value
-                else: availability_slots[key] = value
-            date_time_start += timedelta(minutes=frequency)
+        while when_start <= when_end:
+            for key, value in single_restaurant(when_start, seats, venue_id).items():
+                if isinstance(value, list):
+                    if key in availability_slots.keys():
+                        availability_slots[key] += value
+                    else:
+                        availability_slots[key] = value
+                elif isinstance(value, str):
+                    if key in availability_slots.keys():
+                        availability_slots[key] += [value]
+                    else:
+                        availability_slots[key] = [value]
+            when_start += timedelta(minutes=frequency)
         for key, value in availability_slots.items():
             availability_slots[key] = sorted(set(value))
         return availability_slots
 
     @staticmethod
-    def search_day(venue_id, seats, when):
-        date_time = datetime.strptime(when, '%d/%m/%Y') + timedelta(hours=0)
-        hours = 1
-        availability_slots = {}
-        while hours < 24:
-            for key, value in single_restaurant(date_time, seats, venue_id).items():
-                if key in availability_slots.keys():
-                    availability_slots[key] += value
-                else:
-                    availability_slots[key] = value
-            hours += 1
-            date_time += timedelta(hours=hours)
-        for key, value in availability_slots.items():
-            availability_slots[key] = sorted(set(value))
-        return availability_slots
+    def search_day(venue_id, seats, when, start_hour=0, end_hour=24):
+        date_hour_start = when + timedelta(hours=start_hour)
+        date_hour_end = when + timedelta(hours=end_hour)
+        return SingleVenue.search_range_of_hours(venue_id, seats, date_hour_start, date_hour_end, 60)
 
     @staticmethod
     def search_date_range(venue_id, seats, date, last_date):
-        availability_slots = [SingleVenue.search_day(data, seats, venue_id) for data in range(date, last_date, 1)]
+        availability_slots = {}
+        while date <= last_date:
+            availability_slots[date.strftime("%m/%d/%Y")] = [SingleVenue.search_day(venue_id, seats, date)]
+            date = date + timedelta(days=1)
         return availability_slots
 
-
-if __name__ == '__main__':
-    print(SingleVenue.search_day('junowine', 2, "13/12/2021"))
+#
+# if __name__ == '__main__':
+#     start = time.time()
+#     date_time_start = datetime.strptime("29/11/2021", '%d/%m/%Y')
+#     date_time_end = datetime.strptime("13/12/2021", '%d/%m/%Y')
+#     print(SingleVenue.search_day('junowine', 2, date_time_start))
+#     end = time.time()
+#     print(end - start)

@@ -3,47 +3,50 @@ from rich import print
 
 from datetime import datetime
 
-cities = {"Tel Aviv": {"lat": 32.0650841, "lon": 34.7708837, "distance": 5},
-          "Jerusalem": {"lat": 31.7664943, "lon": 35.2251867, "distance": 5},
-          'Haifa': {"lat": 32.7889988, "lon": 34.9659817, "distance": 5},
-          'Hashron': {"lat": 32.1786311, "lon": 34.9051415, "distance": 5},
-          "Ashdod": {"lat": 31.800862, "lon": 34.633986, "distance": 5},
-          "Eilat": {"lat": 29.5624557, "lon": 34.9592158, "distance": 5},
-          "Beer Sheva": {"lat": 31.259107, "lon": 34.7971397, "distance": 5},
-          "Ramat gan": {"lat": 32.0478643, "lon": 34.8160228, "distance": 5},
-          "Modieen": {"lat": 31.9012745, "lon": 35.0028285, "distance": 5},
-          "Rehovot": {"lat": 31.9110709, "lon": 34.8053529, "distance": 5},
-          "Herzilia": {"lat": 32.1575675, "lon": 34.8325876, "distance": 5},
-          "Rishon Lezion": {"lat": 31.9755346, "lon": 34.8089678, "distance": 5},
-          "Netahnya": {"lat": 32.3302093, "lon": 34.8484746, "distance": 5},
-          "Hedera": {"lat": 32.4424186, "lon": 34.8949194, "distance": 5},
-          "Petah Tikva": {"lat": 32.09004, "lon": 34.8584, "distance": 5},
-          "Holon": {"lat": 31.9302558, "lon": 34.7872933, "distance": 5},
-          "Kineret": {"lat": 32.8525805, "lon": 35.6659112, "distance": 20}}
+def cities():
+    return {"Tel Aviv": {"lat": 32.0650841, "lon": 34.7708837, "distance": 5},
+            "Jerusalem": {"lat": 31.7664943, "lon": 35.2251867, "distance": 5},
+            'Haifa': {"lat": 32.7889988, "lon": 34.9659817, "distance": 5},
+            'Hashron': {"lat": 32.1786311, "lon": 34.9051415, "distance": 5},
+            "Ashdod": {"lat": 31.800862, "lon": 34.633986, "distance": 5},
+            "Eilat": {"lat": 29.5624557, "lon": 34.9592158, "distance": 5},
+            "Beer Sheva": {"lat": 31.259107, "lon": 34.7971397, "distance": 5},
+            "Ramat gan": {"lat": 32.0478643, "lon": 34.8160228, "distance": 5},
+            "Modieen": {"lat": 31.9012745, "lon": 35.0028285, "distance": 5},
+            "Rehovot": {"lat": 31.9110709, "lon": 34.8053529, "distance": 5},
+            "Herzilia": {"lat": 32.1575675, "lon": 34.8325876, "distance": 5},
+            "Rishon Lezion": {"lat": 31.9755346, "lon": 34.8089678, "distance": 5},
+            "Netahnya": {"lat": 32.3302093, "lon": 34.8484746, "distance": 5},
+            "Hedera": {"lat": 32.4424186, "lon": 34.8949194, "distance": 5},
+            "Petah Tikva": {"lat": 32.09004, "lon": 34.8584, "distance": 5},
+            "Holon": {"lat": 31.9302558, "lon": 34.7872933, "distance": 5},
+            "Kineret": {"lat": 32.8525805, "lon": 35.6659112, "distance": 20}}
 
-themes = {"meats": "\u05D1\u05E9\u05E8\u05D9\u05DD",
-          "italian": "\u05D0\u05D9\u05D8\u05DC\u05E7\u05D9",
-          "fish": "\u05D3\u05D2\u05D9\u05DD",
-          "yam tichoni": "\u05D9\u05DD \u05EA\u05D9\u05DB\u05D5\u05E0\u05D9",
-          "israeli": "\u05D9\u05E9\u05E8\u05D0\u05DC\u05D9",
-          "American": "\u05D0\u05DE\u05E8\u05D9\u05E7\u05D0\u05D9",
-          "Bistro": "\u05D1\u05D9\u05E1\u05D8\u05E8\u05D5",
-          "Asian": "\u05D0\u05E1\u05D9\u05D9\u05EA\u05D9",
-          "bar": "\u05D1\u05E8",
-          "Food bar": "\u05D1\u05E8 \u05D0\u05D5\u05DB\u05DC",
-          "Tapas": "\u05D8\u05D0\u05E4\u05D0\u05E1",
-          "coffee": "\u05D1\u05D9\u05EA \u05E7\u05E4\u05D4",
-          "Vegan": "\u05D8\u05D1\u05E2\u05D5\u05E0\u05D9",
-          "meatless": "\u05E6\u05DE\u05D7\u05D5\u05E0\u05D9",
-          "south American": "\u05D3\u05E8\u05D5\u05DD \u05D0\u05DE\u05E8\u05D9\u05E7\u05D0\u05D9",
-          "Farm to table": "\u05DE\u05D4\u05D7\u05D5\u05D5\u05D4 \u05DC\u05E9\u05D5\u05DC\u05D7\u05DF",
-          "Wine": "\u05D9\u05E7\u05D1",
-          "Kosher": "\u05DB\u05E9\u05E8",
-          "shushi": "\u05E1\u05D5\u05E9\u05D9",
-          "Indian": "\u05D4\u05D5\u05D3\u05D9",
-          "Vietnam": "\u05D5\u05D9\u05D0\u05D8\u05E0\u05DE\u05D9",
-          "Japanese": "\u05D9\u05E4\u05E0\u05D9",
-          "Chinese": "\u05E1\u05D9\u05E0\u05D9"}
+
+def themes():
+    return {"meats": "\u05D1\u05E9\u05E8\u05D9\u05DD",
+            "italian": "\u05D0\u05D9\u05D8\u05DC\u05E7\u05D9",
+            "fish": "\u05D3\u05D2\u05D9\u05DD",
+            "yam tichoni": "\u05D9\u05DD \u05EA\u05D9\u05DB\u05D5\u05E0\u05D9",
+            "israeli": "\u05D9\u05E9\u05E8\u05D0\u05DC\u05D9",
+            "American": "\u05D0\u05DE\u05E8\u05D9\u05E7\u05D0\u05D9",
+            "Bistro": "\u05D1\u05D9\u05E1\u05D8\u05E8\u05D5",
+            "Asian": "\u05D0\u05E1\u05D9\u05D9\u05EA\u05D9",
+            "bar": "\u05D1\u05E8",
+            "Food bar": "\u05D1\u05E8 \u05D0\u05D5\u05DB\u05DC",
+            "Tapas": "\u05D8\u05D0\u05E4\u05D0\u05E1",
+            "coffee": "\u05D1\u05D9\u05EA \u05E7\u05E4\u05D4",
+            "Vegan": "\u05D8\u05D1\u05E2\u05D5\u05E0\u05D9",
+            "meatless": "\u05E6\u05DE\u05D7\u05D5\u05E0\u05D9",
+            "south American": "\u05D3\u05E8\u05D5\u05DD \u05D0\u05DE\u05E8\u05D9\u05E7\u05D0\u05D9",
+            "Farm to table": "\u05DE\u05D4\u05D7\u05D5\u05D5\u05D4 \u05DC\u05E9\u05D5\u05DC\u05D7\u05DF",
+            "Wine": "\u05D9\u05E7\u05D1",
+            "Kosher": "\u05DB\u05E9\u05E8",
+            "shushi": "\u05E1\u05D5\u05E9\u05D9",
+            "Indian": "\u05D4\u05D5\u05D3\u05D9",
+            "Vietnam": "\u05D5\u05D9\u05D0\u05D8\u05E0\u05DE\u05D9",
+            "Japanese": "\u05D9\u05E4\u05E0\u05D9",
+            "Chinese": "\u05E1\u05D9\u05E0\u05D9"}
 
 
 def single_restaurant(when, size, restaurant_id):
@@ -79,13 +82,17 @@ def single_restaurant(when, size, restaurant_id):
     for word in response.keys():
         if word == 'areas':
             for i in range(len(response['areas'])):
+                # If method is seat, than means restaurant has slots available
                 results[response[word][i]['id']] = [response['areas'][i]['options'][j]['time']
                                                     for j in range(len(response['areas'][i]['options']))
                                                     if response['areas'][i]['options'][j]['method'] == 'seat']
         if word == 'recommended':
             if response['recommended'][0]['id'] in results.keys():
                 results[response['recommended'][0]['id']].append(response['recommended'][0]['time'])
-            else: results[response['recommended'][0]['id']] = response['recommended'][0]['time']
+            else:
+                results[response['recommended'][0]['id']] = response['recommended'][0]['time']
+        for key, value in results.items():
+            results[key] = sorted(set(value))
     return results
 
 
@@ -108,8 +115,8 @@ def all_restaurants_city(city):
     }
 
     data = {"directory": "culinary.pages.il", "locale": "he",
-            "filter": {"location": {"lat": cities[city]['lat'], "lon": cities[city]['lon']},
-                       "distance": cities[city]["distance"],
+            "filter": {"location": {"lat": cities()[city]['lat'], "lon": cities()[city]['lon']},
+                       "distance": cities()[city]["distance"],
                        "component": "reservation"},
             "size": 227, "search_after": "", "market": "XzW03HZwb"}
 
@@ -165,10 +172,10 @@ def search_by_theme(city, theme):
         'cookie': '_gcl_au=1.1.1683183408.1636663583; _ga=GA1.3.2084581254.1636663583; _fbp=fb.2.1636663584969.2003306758; _gid=GA1.3.385775143.1636894681; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsiYW5vbnltb3VzIl0sIngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6ImFub255bW91cyJ9LCJpYXQiOjE2MzY4OTc4NzksImV4cCI6MTYzNjg5ODc3OX0.GvlQH-5WvWMPQwVvqHZgao3XLXWWtyNCiDLu4tm_Ep4; auth_refresh_token=1a340ed0-3f72-4991-9a1b-922f727407e0; auth_token_expired=2021-11-14T14%3A01%3A19Z; _gat_UA-113921616-2=1',
     }
 
-    data = {"directory": "culinary.pages.il", "locale": "he", "filter": {"service": themes[theme],
-                                                                         "location": {"lat": cities[city]['lat'],
-                                                                                      "lon": cities[city]['lon']},
-                                                                         "distance": cities[city]["distance"],
+    data = {"directory": "culinary.pages.il", "locale": "he", "filter": {"service": themes()[theme],
+                                                                         "location": {"lat": cities()[city]['lat'],
+                                                                                      "lon": cities()[city]['lon']},
+                                                                         "distance": cities()[city]["distance"],
                                                                          "component": "reservation"}, "size": 280,
             "search_after": "", "market": "XzW03HZwb"}
 
@@ -178,6 +185,6 @@ def search_by_theme(city, theme):
 
 
 if __name__ == '__main__':
-    date_time_start = datetime.strptime("13/12/2021 18:30", '%d/%m/%Y  %H:%M')
+    date_time_start = datetime.strptime("13/12/2021 10:30", '%d/%m/%Y  %H:%M')
     # print(date_time_start)
-    # print(single_restaurant(date_time_start, 3, 'junowine'))
+    print(single_restaurant(date_time_start, 3, 'junowine'))
