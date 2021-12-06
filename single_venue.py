@@ -1,4 +1,4 @@
-from Search_Venues_API_wrapper import single_restaurant
+from search_venues_API_wrapper import single_restaurant
 from rich import print
 from datetime import datetime
 from datetime import timedelta
