@@ -48,11 +48,11 @@ class SingleVenue:
             date = date + timedelta(days=1)
         return availability_slots
 
-#
-# if __name__ == '__main__':
-#     start = time.time()
-#     date_time_start = datetime.strptime("29/11/2021", '%d/%m/%Y')
-#     date_time_end = datetime.strptime("13/12/2021", '%d/%m/%Y')
-#     print(SingleVenue.search_day('junowine', 2, date_time_start))
-#     end = time.time()
-#     print(end - start)
+
+if __name__ == '__main__':
+    start = time.time()
+    date_time_start = datetime.strptime("13/12/2021", '%d/%m/%Y')
+    date_time_end = datetime.strptime("13/12/2021", '%d/%m/%Y')
+    print(SingleVenue.search_day('junowine', 2, date_time_start))
+    end = time.time()
+    print(end - start)
