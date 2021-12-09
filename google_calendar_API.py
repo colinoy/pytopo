@@ -6,11 +6,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
-
-def get_calendar_service():
+def get_calendar_service(scopes):
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -19,13 +16,13 @@ def get_calendar_service():
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        creds = Credentials.from_authorized_user_file('token.json', scopes)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
@@ -37,4 +34,4 @@ def get_calendar_service():
 
 if __name__ == '__main__':
     pytopo_id = "7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"
-    get_calendar_service()
+    print(get_calendar_service('https://www.googleapis.com/auth/calendar'))

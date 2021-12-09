@@ -9,7 +9,7 @@ class CalenderView:
 
     @staticmethod
     def get_upcoming_events(calender_id=None):
-        service = get_calendar_service()
+        service = get_calendar_service('https://www.googleapis.com/auth/calendar')
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
         print('Getting the upcoming 10 events')
         if calender_id is None:
@@ -29,7 +29,7 @@ class CalenderView:
 
     @staticmethod
     def get_all_calender_list(calender_id=None):
-        service = get_calendar_service()
+        service = get_calendar_service('https://www.googleapis.com/auth/calendar')
         # Call the Calendar API
         print('Getting list of calendars')
         calendars_result = service.calendarList().list().execute()
@@ -51,30 +51,43 @@ class CalenderView:
                     print("%s\t%s\t%s" % (summary, calender_id, primary))
 
     @staticmethod
-    def add_event(when, resturant_name, calendar_id="7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"):
-        service = get_calendar_service()
-
-        d = when
+    def add_event(when, restaurant_id, seats, where_we_seat, calendar_id="7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"):
+        service = get_calendar_service(['https://www.googleapis.com/auth/calendar.events'])
         start = when.isoformat()
         end = (when + timedelta(hours=2)).isoformat()
-
         event_result = service.events().insert(calendarId=calendar_id,
                                                body={
-                                                   "summary": 'Automating calendar',
-                                                   "description": 'This is a tutorial example of automating google calendar with python',
-                                                   "start": {"dateTime": start, "timeZone": 'Asia/Kolkata'},
-                                                   "end": {"dateTime": end, "timeZone": 'Asia/Kolkata'},
+                                                   "summary": 'Reservation to: ' + restaurant_id + " for " +
+                                                                  str(seats) + " seats",
+                                                   "description": "Please choose where you want to seat: " + '\n'.join(where_we_seat),
+                                                   "start": {"dateTime": start, "timeZone": 'Asia/Jerusalem'},
+                                                   "end": {"dateTime": end, "timeZone": 'Asia/Jerusalem'},
                                                }
                                                ).execute()
 
         print("created event")
-        print("id: ", event_result['id'])
+        # print("id: ", event_result['id'])
         print("summary: ", event_result['summary'])
         print("starts at: ", event_result['start']['dateTime'])
         print("ends at: ", event_result['end']['dateTime'])
+
+    @staticmethod
+    def add_calendar(restaurant_id):
+        service = get_calendar_service(['https://www.googleapis.com/auth/calendar'])
+
+        new_calendar = {
+            'summary': str(restaurant_id),
+            'timeZone': 'Asia/Jerusalem'
+        }
+
+        created_calendar = service.calendars().insert(body=new_calendar).execute()
+
+        print("created_calendar")
+        return created_calendar
 
 
 if __name__ == "__main__":
     pytopo_id = "7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"
     date = datetime.strptime("10/12/2021 10:30", '%d/%m/%Y %H:%M')
-    CalenderView.add_event(date, 'juno')
+    print(CalenderView.add_calendar('juno'))
+    # CalenderView.add_calendar('juno')

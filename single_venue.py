@@ -1,4 +1,6 @@
+import google_calendar_api_wrapper
 from search_venues_API_wrapper import single_restaurant
+from google_calendar_api_wrapper import CalenderView
 from rich import print
 from datetime import datetime
 from datetime import timedelta
@@ -12,7 +14,20 @@ class SingleVenue:
     @staticmethod
     def availability(venue_id, seats, when):
         date_time = datetime.strptime(when, '%d/%m/%Y  %H:%M')
-        return single_restaurant(date_time, seats, venue_id)
+        availability_slots = single_restaurant(date_time, seats, venue_id)
+        availability = {}
+        new_calender = google_calendar_api_wrapper.CalenderView.add_calendar(venue_id)
+        for key, value in availability_slots.items():
+            for hour in value:
+                if hour not in availability.keys():
+                    availability[hour] = [key]
+                else: availability[hour] += [key]
+        for key, value in availability.items():
+            date = when[:11] + key
+            date_time = datetime.strptime(date, '%d/%m/%Y  %H%M')
+            where_we_seats = value
+            google_calendar_api_wrapper.CalenderView.add_event(date_time, venue_id, seats, where_we_seats, new_calender['id'])
+        return availability
 
     @staticmethod
     def search_range_of_hours(venue_id, seats, when_start, when_end, frequency):
@@ -51,8 +66,8 @@ class SingleVenue:
 
 if __name__ == '__main__':
     start = time.time()
-    date_time_start = datetime.strptime("13/12/2021", '%d/%m/%Y')
-    date_time_end = datetime.strptime("13/12/2021", '%d/%m/%Y')
-    print(SingleVenue.search_day('junowine', 2, date_time_start))
+    # date_time_start = datetime.strptime("13/12/2021 17:00")
+    # date_time_end = datetime.strptime("23/12/2021", '%d/%m/%Y')
+    print(SingleVenue.availability('junowine', 2, "23/01/2022 19:00"))
     end = time.time()
     print(end - start)
