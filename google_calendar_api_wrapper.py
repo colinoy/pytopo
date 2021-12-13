@@ -9,7 +9,7 @@ class CalenderView:
 
     @staticmethod
     def get_upcoming_events(calender_id=None):
-        service = get_calendar_service('https://www.googleapis.com/auth/calendar')
+        service = get_calendar_service(['https://www.googleapis.com/auth/calendar'])
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
         print('Getting the upcoming 10 events')
         if calender_id is None:
@@ -52,7 +52,7 @@ class CalenderView:
 
     @staticmethod
     def add_event(when, restaurant_id, seats, where_we_seat, calendar_id="7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"):
-        service = get_calendar_service(['https://www.googleapis.com/auth/calendar.events'])
+        service = get_calendar_service('https://www.googleapis.com/auth/calendar.events')
         start = when.isoformat()
         end = (when + timedelta(hours=2)).isoformat()
         event_result = service.events().insert(calendarId=calendar_id,
@@ -83,11 +83,11 @@ class CalenderView:
         created_calendar = service.calendars().insert(body=new_calendar).execute()
 
         print("created_calendar")
-        return created_calendar
+        return created_calendar['id']
 
 
 if __name__ == "__main__":
     pytopo_id = "7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"
     date = datetime.strptime("10/12/2021 10:30", '%d/%m/%Y %H:%M')
-    print(CalenderView.add_calendar('juno'))
+    print(CalenderView.add_event(date, 'junowine', 4, 'בחוץ',))
     # CalenderView.add_calendar('juno')

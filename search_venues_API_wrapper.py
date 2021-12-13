@@ -79,6 +79,8 @@ def single_restaurant(when, size, restaurant_id):
     response = requests.post('https://ontopo.co.il/api/availability/searchAvailability', headers=headers, json=data)
     response = response.json()
     results = {}
+    if when < datetime.now():
+        raise Exception("You idiot! the time has passed")
     for word in response.keys():
         if word == 'areas':
             for i in range(len(response['areas'])):
@@ -185,6 +187,7 @@ def search_by_theme(city, theme):
 
 
 if __name__ == '__main__':
-    date_time_start = datetime.strptime("13/12/2021 10:30", '%d/%m/%Y  %H:%M')
+    date_time_start = datetime.strptime("18/01/2022 8:00", '%d/%m/%Y  %H:%M')
+    date_time_end = datetime.strptime("18/01/2022 18:00", '%d/%m/%Y %H:%M')
     # print(date_time_start)
     print(single_restaurant(date_time_start, 3, 'junowine'))
