@@ -1,7 +1,6 @@
 import google_calendar_api_wrapper
 from search_venues_API_wrapper import single_restaurant
-from google_calendar_api_wrapper import CalenderView
-from google_calendar_API import *
+from restaurant_schedule_api import *
 from rich import print
 from datetime import datetime
 from datetime import timedelta
@@ -12,7 +11,9 @@ class SingleVenue:
     def __init__(self):
         pass
 
-    # When is date time
+    '''
+    When is date time
+    '''
     @staticmethod
     def availability(venue_id, seats, when):
         return single_restaurant(when, seats, venue_id)
@@ -57,6 +58,7 @@ class SingleVenue:
 
     @staticmethod
     def search_day(venue_id, seats, when):
+        get_restaurant_schedule_for_day(venue_id)
         date_hour_start = when + timedelta(hours=8)
         date_hour_end = when + timedelta(hours=24)
         return SingleVenue.search_range_of_hours(venue_id, seats, date_hour_start, date_hour_end, 60)
