@@ -87,14 +87,17 @@ def single_restaurant(when, size, restaurant_id):
                 # If method is seat, than means restaurant has slots available
                 results[response[word][i]['id']] = [response['areas'][i]['options'][j]['time']
                                                     for j in range(len(response['areas'][i]['options']))
-                                                    if response['areas'][i]['options'][j]['method'] == 'seat']
+                                                    if response['areas'][i]['options'][j]['method'] == 'seat' or
+                                                    response['areas'][i]['options'][j]['method'] == 'walkin']
         if word == 'recommended':
             if response['recommended'][0]['id'] in results.keys():
                 results[response['recommended'][0]['id']].append(response['recommended'][0]['time'])
             else:
                 results[response['recommended'][0]['id']] = response['recommended'][0]['time']
-        for key, value in results.items():
-            results[key] = sorted(set(value))
+
+        if len(results.values()) != 1:
+            for key, value in results.items():
+                results[key] = sorted(set(value))
     return results
 
 

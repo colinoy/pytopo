@@ -14,6 +14,7 @@ class SingleVenue:
     '''
     When is date time
     '''
+
     @staticmethod
     def availability(venue_id, seats, when):
         return single_restaurant(when, seats, venue_id)
@@ -33,13 +34,16 @@ class SingleVenue:
             if len(key) == 4:
                 new_date = date + timedelta(hours=int(key[:2]), minutes=int(key[2:]))
                 google_calendar_api_wrapper.CalenderView.add_event(new_date, rest_id, seats, value,
-                                                               new_calender)
+                                                                   new_calender)
         return new_calender
 
     @staticmethod
     def search_range_of_hours(venue_id, seats, when_start, when_end, frequency=60):
         date = when_start.replace(hour=00, minute=00)
         availability = single_restaurant(when_start, seats, venue_id)
+        for key, value in availability.items():
+            if isinstance(value, str):
+                availability[key] = [value]
         while when_start <= when_end:
             for key, value in single_restaurant(when_start, seats, venue_id).items():
                 if isinstance(value, list):
@@ -58,16 +62,17 @@ class SingleVenue:
 
     @staticmethod
     def search_day(venue_id, seats, when):
-        get_restaurant_schedule_for_day(venue_id)
-        date_hour_start = when + timedelta(hours=8)
-        date_hour_end = when + timedelta(hours=24)
+        restaurants_schedule = get_restaurant_schedule_for_day(venue_id, when)
+        hours = list(restaurants_schedule.keys())
+        date_hour_start = datetime.combine(when, hours[0])
+        date_hour_end = datetime.combine(when, hours[len(restaurants_schedule) - 1])
         return SingleVenue.search_range_of_hours(venue_id, seats, date_hour_start, date_hour_end, 60)
 
     @staticmethod
     def search_date_range(venue_id, seats, date, last_date):
         availability_slots = {}
         while date <= last_date:
-            availability_slots[date.strftime("%m/%d/%Y")] = [SingleVenue.search_day(venue_id, seats, date)]
+            availability_slots[date] = [SingleVenue.search_day(venue_id, seats, date)]
             date = date + timedelta(days=1)
         return availability_slots
 
@@ -79,6 +84,8 @@ if __name__ == '__main__':
     date_time_end = datetime.strptime("18/01/2022 18:00", '%d/%m/%Y %H:%M')
     # , "18/01/2022 21:00"
     # print(SingleVenue.add_to_calender('junowine', 3, date_time_start, availability))
-    print(SingleVenue.search_day('junowine', 3, date_time_start))
+    # print(SingleVenue.search_day('junowine', 3, date_time_start))
+    print(SingleVenue.search_date_range('junowine', 2, datetime.strptime("18/01/2022", '%d/%m/%Y'),
+                                        datetime.strptime("20/01/2022", '%d/%m/%Y')))
     end = time.time()
     print(end - start)

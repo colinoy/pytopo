@@ -54,7 +54,7 @@ class CalenderView:
     def add_event(when, restaurant_id, seats, where_we_seat, calendar_id="7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"):
         service = get_calendar_service('https://www.googleapis.com/auth/calendar.events')
         start = when.isoformat()
-        end = (when + timedelta(hours=2)).isoformat()
+        end = (when + timedelta(minutes=30)).isoformat()
         event_result = service.events().insert(calendarId=calendar_id,
                                                body={
                                                    "summary": 'Reservation to: ' + restaurant_id + " for " +
