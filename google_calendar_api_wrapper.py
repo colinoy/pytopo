@@ -1,6 +1,7 @@
 from google_calendar_API import *
 from datetime import datetime
 from datetime import timedelta
+from restaurant_schedule_api import  *
 
 
 class CalenderView:
@@ -54,7 +55,8 @@ class CalenderView:
     def add_event(when, restaurant_id, seats, where_we_seat, calendar_id="7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"):
         service = get_calendar_service('https://www.googleapis.com/auth/calendar.events')
         start = when.isoformat()
-        end = (when + timedelta(minutes=30)).isoformat()
+        frequency = get_shifts(restaurant_id)
+        end = (when + timedelta(minutes=frequency)).isoformat()
         event_result = service.events().insert(calendarId=calendar_id,
                                                body={
                                                    "summary": 'Reservation to: ' + restaurant_id + " for " +
@@ -89,5 +91,6 @@ class CalenderView:
 if __name__ == "__main__":
     pytopo_id = "7bpbgll4bos1al5e7ves65chl4@group.calendar.google.com"
     date = datetime.strptime("10/12/2021 10:30", '%d/%m/%Y %H:%M')
-    print(CalenderView.add_event(date, 'junowine', 4, 'בחוץ',))
+    # print(CalenderView.add_event(date, 'junowine', 4, 'בחוץ',))
+    print(get_shifts('junowine'))
     # CalenderView.add_calendar('juno')

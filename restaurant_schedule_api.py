@@ -46,11 +46,17 @@ def parse_string_into_list_of_ints(string):
     for part in all_parts:
         if '-' in part:
             start, end = part.split("-")
-            for i in range(int(start), int(end)+1):
+            for i in range(int(start), int(end) + 1):
                 result.append(i)
         else:
             result.append(int(part))
     return result
+
+
+def get_shifts(restaurant_id):
+    raw_result = get_restaurant_schedule_raw(restaurant_id)
+    shifts = raw_result['content']['shifts']['shifts']['time']['step']
+    return shifts
 
 
 def get_restaurant_schedule_parsed(restaurant_id="junowine"):
@@ -145,5 +151,5 @@ def get_restaurant_schedule_for_day(restaurant_id, day):
 
 if __name__ == "__main__":
     import requests
-    # print(get_restaurant_schedule_for_day("shishko", dt.datetime.strptime("20220118", "%Y%m%d")))
-
+    # print(get_restaurant_full_schedule("shishko"))
+# , dt.datetime.strptime("20220118", "%Y%m%d")
